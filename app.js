@@ -4,6 +4,10 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var env       = process.env.NODE_ENV || "production";
+var config    = require('./config.json')[env];
+var mongoose = require('mongoose');
+mongoose.connect(config.mongo_url);
 
 var routes = require('./routes/index');
 var users = require('./routes/users');

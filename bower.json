@@ -1,0 +1,22 @@
+{
+  "name": "tickets_chat",
+  "description": "",
+  "main": "",
+  "authors": [
+    "Pavelgyravel <pavelgyravel@gmail.com>"
+  ],
+  "license": "MIT",
+  "moduleType": [],
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.6"
+  }
+}

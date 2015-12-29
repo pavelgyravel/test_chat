@@ -1,0 +1,9 @@
+{
+	"development" : {
+		"mongo_url" : "mongodb://localhost/tickets_chat"
+	},
+	"production" : {
+		"mongo_url" : "mongodb://localhost/passport"
+	}
+
+}

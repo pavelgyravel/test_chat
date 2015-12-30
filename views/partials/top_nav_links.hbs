@@ -1,0 +1,11 @@
+{{#if user}}
+	<ul class="nav navbar-nav navbar-right">
+		<li><a href="#">{{user.username}} ({{user.email}})</a></li>
+		<li><a href="/login">Logout</a></li>
+	</ul>
+{{else}}
+	<ul class="nav navbar-nav navbar-right">
+		<li><a href="/login">Login</a></li>
+		<li><a href="/sign_up">Sign up</a></li>
+	</ul>
+{{/if}}

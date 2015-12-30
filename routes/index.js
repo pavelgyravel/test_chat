@@ -1,9 +1,180 @@
 var express = require('express');
 var router = express.Router();
+var User = require('../models/user');
+var validate = require("validate.js");
+var auth = require('../lib/auth');
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+
+
+router.get('/', auth.userLoggedIn, function(req, res, next) {
+	// var testUser = new User({
+	//     username: 'admin',
+	//     password: 'Password123'
+	// });
+	// testUser.save(function(err) {
+
+	//     if (err) throw err;
+
+	//     //fetch user and test password verification
+	//     User.findOne({ username: 'admin' }, function(err, user) {
+	//         if (err) throw err;
+
+	//         console.log(user);
+
+	//         // test a matching password
+	//         user.comparePassword('Password123', function(err, isMatch) {
+	//             if (err) throw err;
+	//             console.log('123:', isMatch); // -> Password123: true
+	//         });
+
+	//         // test a failing password
+	//         user.comparePassword('Password123', function(err, isMatch) {
+	//             if (err) throw err;
+	//             console.log('123:', isMatch); // -> 123Password: false
+	//         });
+	//     });
+	// });
+	
+	User.find({}, function(err, users) {
+		res.render('index', {users: users, user: req.user});		
+	})
+	
+	//res.render('index', {user: req.user});
+	
+});
+
+router.get('/login', function(req, res, next) {
+	res.render('login', {page: "login"});
+});
+
+router.post('/login', function(req, res, next) {
+	var form = req.body;
+
+	var constraints = {
+    	email: {
+    		presence: true,
+    	},
+    	password: {
+    		presence: true,	
+    	}
+    };
+
+    var validation = validate(form, constraints);
+
+    if (validation !== undefined) {
+		var message = "";
+		for(var index in validation) {     
+		    message += "<p>" + validation[index] + "</p>";
+		}
+		res.render('login', {form: form, title: "Login up to chat.", message: message, page: "login"});
+	} else {
+		User.findOne({email: form.email}, function(err, user) {
+			if (err || !user) {
+				res.render('login', {form: form, title: "Login to chat.", message: "Wrong email or password.", page: "login"});
+			} else {	
+				
+				user.comparePassword(form.password, function(err, isMatch) {
+		            if (err) {
+		            	res.render('login', {form: form, title: "Login to chat.", message: "Something went wrong during login. Sorry :(", page: "login"});
+		            }
+
+		            if (isMatch) {
+		            	req.session.user_id = user.id;
+						res.redirect('/');
+		            } else {
+		            	res.render('login', {form: form, title: "Login to chat.", message: "Wrong email or password.", page: "login"});
+		            }
+		            
+		        });
+
+			}
+		});
+		
+	}
+
+
+	
+});
+
+router.get('/logout', function(req, res, next) {
+  req.session.destroy(function(){                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+    res.redirect('/');                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+  }); 
+});
+
+router.get('/sign_up', function(req, res, next) {
+  res.render('sign_up', {page: "sign_up", title: "Sign up to chat."});
+});
+
+router.post('/sign_up', function(req, res, next) {
+	var form = req.body;
+
+	var constraints = {
+    	email: {
+    		presence: true,	
+    		email: true
+    	},
+    	name: {
+    		presence: true,
+    	},
+    	password: {
+    		presence: true,	
+    	},
+    	confirm_password: {
+    		presence: true,	
+			equality: "password"
+		}
+    };
+    var validation = validate(form, constraints);
+
+    if (validation !== undefined) {
+		var message = "";
+		for(var index in validation) {     
+		    message += "<p>" + validation[index] + "</p>";
+		}
+		res.render('sign_up', {form: form, title: "Sign up to chat.", message: message, page: "sign_up"});
+	} else {
+		var newUser = new User({
+		    email: form.email,
+		    username: form.name,
+		    password: form.password,
+		});
+
+		newUser.findSimilar(form.email, form.name, function (err, users) {
+		  if (users.length === 0) {
+			newUser.save(function(err, user){
+				if (err) {
+					res.render('sign_up', {form: form, title: "Sign up to chat.", message: "Something went wrong during registration. Sorry :(", page: "sign_up"});
+				}
+
+				req.session.user_id = user.id;
+				res.redirect('/');
+			});  	
+		  } else {
+		  	res.render('sign_up', {form: form, title: "Sign up to chat.", message: "User with such name or email already exist.", page: "sign_up"});
+		  }
+		});
+	}
+
+	
+
+	
+
+
+
+
+  	//res.render('sign_up', {page: "sign_up", title: "Sign up to chat."});
+});
+
+router.get('/restore', function(req, res, next) {
+  res.render('restore', {page: "restore"});
+});
+
+router.get('/users_list', function(req, res, next) {
+	User.find({}, function(err, users) {
+		res.render('users_list', {users: users, user: req.user});		
+	})
+  
 });
 
 module.exports = router;

@@ -1,0 +1,44 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="alert alert-danger {{#unless message}} hide{{/unless}}" role="alert" id="JQ_message">{{{message}}}</div>
+      <form class="form-horizontal" method="post" id="JQ_login_form">
+
+      <fieldset>
+      
+      <!-- Form Name -->
+      <legend>Login to chat</legend>
+      
+      <!-- Text input-->
+      <div class="form-group">
+        <label class="col-md-4 control-label" for="name">Email</label>  
+        <div class="col-md-4">
+        <input id="JQ_email" name="email" type="text" placeholder="" class="form-control input-md" value="{{form.email}}">
+          
+        </div>
+      </div>
+      
+      <!-- Password input-->
+      <div class="form-group">
+        <label class="col-md-4 control-label" for="password">Password</label>
+        <div class="col-md-4">
+          <input id="JQ_password" name="password" type="password" placeholder="" class="form-control input-md" value="{{form.password}}">
+          
+        </div>
+      </div>
+      
+      <!-- Button (Double) -->
+      <div class="form-group">
+        <label class="col-md-4 control-label" for="login"></label>
+        <div class="col-md-8">
+          <button id="login" name="login" class="btn btn-primary">Login</button>
+          - or -
+          <a href="/sign_up">Sign up</a> / <a href="/restore">Restore password</a>
+        </div>
+      </div>
+      
+      </fieldset>
+      </form>
+    </div>
+  </div>
+</div>

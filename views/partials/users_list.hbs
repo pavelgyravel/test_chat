@@ -1,5 +1,11 @@
 <ul class="list-group">
+	<li class="list-group-item list-group-item-info">Other users</li>
+	
 	{{#each users}}
-		<li class="list-group-item">{{username}}</li>
+		{{#ifCond ../user._id _id}}
+			<li class="list-group-item"><b>{{username}} (it's you)</b></li>
+		{{else}}
+			<a href="#" class="list-group-item">{{username}}</a>
+		{{/ifCond}}
 	{{/each}}
 </ul>

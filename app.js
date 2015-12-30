@@ -41,6 +41,14 @@ filenames.forEach(function (filename) {
   hbs.registerPartial(name, template);
 });
 
+hbs.registerHelper("ifCond", function (v1, v2, options){
+    console.log(v1.toString(), v2.toString());
+    if(v1.toString() == v2.toString()) {
+        return options.fn(this);
+    }
+    return options.inverse(this);
+});
+
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));

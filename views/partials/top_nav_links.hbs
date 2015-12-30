@@ -1,7 +1,9 @@
 {{#if user}}
 	<ul class="nav navbar-nav navbar-right">
-		<li><a href="#">{{user.username}} ({{user.email}})</a></li>
-		<li><a href="/login">Logout</a></li>
+		
+		<li><a href="/">Chat</a></li>
+		<li><a href="/profile">Profile</a></li>
+		<li><a href="/login">Logout ({{user.email}})</a></li>
 	</ul>
 {{else}}
 	<ul class="nav navbar-nav navbar-right">

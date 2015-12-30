@@ -155,26 +155,62 @@ router.post('/sign_up', function(req, res, next) {
 		  }
 		});
 	}
-
-	
-
-	
-
-
-
-
-  	//res.render('sign_up', {page: "sign_up", title: "Sign up to chat."});
 });
 
 router.get('/restore', function(req, res, next) {
   res.render('restore', {page: "restore"});
 });
 
-router.get('/users_list', function(req, res, next) {
+router.get('/users_list', auth.userLoggedIn, function(req, res, next) {
 	User.find({}, function(err, users) {
 		res.render('users_list', {users: users, user: req.user});		
 	})
   
+});
+
+router.get('/profile', auth.userLoggedIn, function(req, res, next) {
+	res.render('profile', {title: "User profile", page: "profile", form: req.user, user: req.user});
+});
+
+router.post('/profile', auth.userLoggedIn, function(req, res, next) {
+	var form = req.body;
+
+	var constraints = {
+    	name: {
+    		presence: true,
+    	},
+    };
+
+    if (form.password || form.confirm_password) {
+    	constraints.password = {
+    		presence: true,	
+    	};
+    	constraints.confirm_password = {
+    		presence: true,	
+			equality: "password"
+		};
+    }
+
+    var validation = validate(form, constraints);
+
+    if (validation !== undefined) {
+		var message = "";
+		for(var index in validation) {     
+		    message += "<p>" + validation[index] + "</p>";
+		}
+		res.render('profile', {form: form, title: "User profile", message: message, page: "profile", user: req.user});
+	} else {
+		User.findById(req.user._id, function(err, user) {
+			user.username = form.name;
+			if(form.password) {
+				user.password = form.password;
+			}
+			user.save(function(err, user){
+				console.log(user);
+				res.render('profile', {title: "User profile", page: "profile", form: user, user: user, message: "Success! Profile saved.", messageType: "alert-success"});		
+			});
+		})
+	}
 });
 
 module.exports = router;

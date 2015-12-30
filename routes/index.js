@@ -90,16 +90,15 @@ router.post('/login', function(req, res, next) {
 			}
 		});
 		
-	}
-
-
-	
+	}	
 });
 
 router.get('/logout', function(req, res, next) {
-  req.session.destroy(function(){                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
-    res.redirect('/');                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
-  }); 
+	
+	req.session.destroy(function(err){	
+		console.log("err", err);
+		res.redirect('/');                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+	}); 
 });
 
 router.get('/sign_up', function(req, res, next) {

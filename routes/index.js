@@ -8,7 +8,7 @@ var auth = require('../lib/auth');
 
 router.get('/', auth.userLoggedIn, function(req, res, next) {
 	User.find({}, function(err, users) {
-		res.render('index', {users: users, user: req.user});		
+		res.render('index', {users: users, user: req.user, page: "index"});		
 	})
 });
 
@@ -65,7 +65,7 @@ router.post('/login', function(req, res, next) {
 router.get('/logout', function(req, res, next) {
 	
 	req.session.destroy(function(err){	
-		console.log("err", err);
+		// console.log("err", err);
 		res.redirect('/');                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
 	}); 
 });
@@ -174,7 +174,7 @@ router.post('/profile', auth.userLoggedIn, function(req, res, next) {
 				user.password = form.password;
 			}
 			user.save(function(err, user){
-				console.log(user);
+				// console.log(user);
 				res.render('profile', {title: "User profile", page: "profile", form: user, user: user, message: "Success! Profile saved.", messageType: "alert-success"});		
 			});
 		})

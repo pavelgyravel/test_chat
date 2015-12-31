@@ -7,40 +7,9 @@ var auth = require('../lib/auth');
 
 
 router.get('/', auth.userLoggedIn, function(req, res, next) {
-	// var testUser = new User({
-	//     username: 'admin',
-	//     password: 'Password123'
-	// });
-	// testUser.save(function(err) {
-
-	//     if (err) throw err;
-
-	//     //fetch user and test password verification
-	//     User.findOne({ username: 'admin' }, function(err, user) {
-	//         if (err) throw err;
-
-	//         console.log(user);
-
-	//         // test a matching password
-	//         user.comparePassword('Password123', function(err, isMatch) {
-	//             if (err) throw err;
-	//             console.log('123:', isMatch); // -> Password123: true
-	//         });
-
-	//         // test a failing password
-	//         user.comparePassword('Password123', function(err, isMatch) {
-	//             if (err) throw err;
-	//             console.log('123:', isMatch); // -> 123Password: false
-	//         });
-	//     });
-	// });
-	
 	User.find({}, function(err, users) {
 		res.render('index', {users: users, user: req.user});		
 	})
-	
-	//res.render('index', {user: req.user});
-	
 });
 
 router.get('/login', function(req, res, next) {

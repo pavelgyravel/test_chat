@@ -65,7 +65,6 @@ router.post('/login', function(req, res, next) {
 router.get('/logout', function(req, res, next) {
 	
 	req.session.destroy(function(err){	
-		// console.log("err", err);
 		res.redirect('/');                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
 	}); 
 });
@@ -82,7 +81,7 @@ router.post('/sign_up', function(req, res, next) {
     		presence: true,	
     		email: true
     	},
-    	name: {
+    	username: {
     		presence: true,
     	},
     	password: {
@@ -93,6 +92,7 @@ router.post('/sign_up', function(req, res, next) {
 			equality: "password"
 		}
     };
+
     var validation = validate(form, constraints);
 
     if (validation !== undefined) {
@@ -102,25 +102,14 @@ router.post('/sign_up', function(req, res, next) {
 		}
 		res.render('sign_up', {form: form, title: "Sign up to chat.", message: message, page: "sign_up"});
 	} else {
-		var newUser = new User({
-		    email: form.email,
-		    username: form.name,
-		    password: form.password,
-		});
-
-		newUser.findSimilar(form.email, form.name, function (err, users) {
-		  if (users.length === 0) {
-			newUser.save(function(err, user){
-				if (err) {
-					res.render('sign_up', {form: form, title: "Sign up to chat.", message: "Something went wrong during registration. Sorry :(", page: "sign_up"});
-				}
-
+		var user = new User;
+		user.createUser(form, function (err, user) {
+			if (err) {
+				res.render('sign_up', {form: form, title: "Sign up to chat.", message: err.msg, page: "sign_up"});
+			} else {
 				req.session.user_id = user.id;
-				res.redirect('/');
-			});  	
-		  } else {
-		  	res.render('sign_up', {form: form, title: "Sign up to chat.", message: "User with such name or email already exist.", page: "sign_up"});
-		  }
+		 		res.redirect('/');
+			}
 		});
 	}
 });
@@ -144,7 +133,7 @@ router.post('/profile', auth.userLoggedIn, function(req, res, next) {
 	var form = req.body;
 
 	var constraints = {
-    	name: {
+    	username: {
     		presence: true,
     	},
     };
@@ -169,7 +158,7 @@ router.post('/profile', auth.userLoggedIn, function(req, res, next) {
 		res.render('profile', {form: form, title: "User profile", message: message, page: "profile", user: req.user});
 	} else {
 		User.findById(req.user._id, function(err, user) {
-			user.username = form.name;
+			user.username = form.username;
 			if(form.password) {
 				user.password = form.password;
 			}
@@ -191,6 +180,22 @@ router.get('/user/:user_id', auth.userAdmin, function(req, res) {
 		}
 		
 	});
-});;
+});
+
+router.post('/user/:user_id', auth.userAdmin, function(req, res) {
+	var user_id = req.params.user_id;
+	User.findById(user_id, function (err, user) {
+		if (user === undefined) {
+			res.render('user_profile', {title: "User profile", page: "profile", message: "Looks like this user are not exist", });		
+		} else {
+			res.render('user_profile', {title: "User profile", page: "profile", user: user});		
+		}
+		
+	});
+});
+
+router.get('/u', function(req, res){
+
+})
 
 module.exports = router;

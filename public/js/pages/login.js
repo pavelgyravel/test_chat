@@ -1,7 +1,7 @@
 define(["jquery", "validate"], function($, validate) {
     $(function($) {
         var login_form = $('#JQ_login_form');
-        var name = $('#JQ_name');
+        var email = $('#JQ_email');
         var password = $('#JQ_password');
         var message = $('#JQ_message');
 
@@ -18,7 +18,7 @@ define(["jquery", "validate"], function($, validate) {
         };
         
         login_form.submit(function(e) {
-        	var validation = validate({name: email.val(), password: password.val()}, constraints);
+        	var validation = validate({email: email.val(), password: password.val()}, constraints);
 
         	if (validation !== undefined) {
         		console.log(validation);

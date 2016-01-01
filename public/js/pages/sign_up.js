@@ -1,7 +1,7 @@
 define(["jquery", "validate"], function($, validate) {
     $(function($) {
         var login_form = $('#JQ_sign_up_form');
-        var name = $('#JQ_name');
+        var username = $('#JQ_username');
         var email = $('#JQ_email');
         var password = $('#JQ_password');
         var confirm_password = $('#JQ_confirm_password');
@@ -12,7 +12,7 @@ define(["jquery", "validate"], function($, validate) {
         		presence: true,	
         		email: true
         	},
-        	name: {
+        	username: {
         		presence: true,
         	},
         	password: {
@@ -28,7 +28,7 @@ define(["jquery", "validate"], function($, validate) {
         	message.empty().removeClass('hide');
         	var form_data = {
         		email: email.val(),
-        		name: name.val(), 
+        		username: username.val(), 
         		password: password.val(), 
         		confirm_password: confirm_password.val()
         	};

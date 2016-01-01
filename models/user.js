@@ -7,23 +7,21 @@ var UserSchema = mongoose.Schema({
     email: { type: String, required: true, index: { unique: true } },
     password: { type: String, required: true },
     admin: { type: Boolean, default: false },
+    locked: { type: Boolean, default: false },
 });
 
 UserSchema.pre('save', function(next) {
     var user = this;
 
-    // only hash the password if it has been modified (or is new)
     if (!user.isModified('password')) return next();
 
-    // generate a salt
     bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
         if (err) return next(err);
 
-        // hash the password along with our new salt
+        
         bcrypt.hash(user.password, salt, function(err, hash) {
             if (err) return next(err);
 
-            // override the cleartext password with the hashed one
             user.password = hash;
             next();
         });
@@ -37,10 +35,28 @@ UserSchema.methods.comparePassword = function(candidatePassword, cb) {
     });
 };
 
-UserSchema.methods.findSimilar = function (email, name, cb) {
-	
+UserSchema.methods.findSimilar = function (email, name, cb) {	
   return this.model('User').find({$or: [{username: name}, {email: email}, ]}, cb);
 }
+
+UserSchema.methods.createUser = function(user, cb) {
+    this.model('User').create(user, function(err, user) {
+        if (err){  
+            err.msg = (err.code === 11000) ? "User with such name or email already exist" : "Something went wrong during registration. Sorry :(";
+            cb(err);
+        } else {
+            cb(err, user);
+        }
+    });  
+};
+
+UserSchema.methods.updateUser = function(user, cb) {
+  
+};
+
+UserSchema.methods.deleteUser = function(user, cb) {
+  
+};
 
 var User = mongoose.model('User', UserSchema);
 

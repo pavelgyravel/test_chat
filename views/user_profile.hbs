@@ -11,7 +11,7 @@
 					
 					<!-- Text input-->
 					<div class="form-group">
-					  <label class="col-md-4 control-label" for="email">Email</label>  
+					  <label class="col-md-4 control-label" for="JQ_email">Email</label>  
 					  <div class="col-md-4">
 					  <input id="JQ_email" name="email" type="text" placeholder="" class="form-control input-md" value="{{user.email}}" disabled="">
 					    
@@ -20,16 +20,16 @@
 					
 					<!-- Text input-->
 					<div class="form-group">
-					  <label class="col-md-4 control-label" for="name">Name</label>  
+					  <label class="col-md-4 control-label" for="JQ_name">Name</label>  
 					  <div class="col-md-4">
-					  <input id="JQ_name" name="name" type="text" placeholder="" class="form-control input-md" value="{{user.username}}">
+					  <input id="JQ_username" name="username" type="text" placeholder="" class="form-control input-md" value="{{user.username}}">
 					    
 					  </div>
 					</div>
 					
 					<!-- Password input-->
 					<div class="form-group">
-					  <label class="col-md-4 control-label" for="password">Password</label>
+					  <label class="col-md-4 control-label" for="JQ_password">Password</label>
 					  <div class="col-md-4">
 					    <input id="JQ_password" name="password" type="password" placeholder="" class="form-control input-md" >
 					    
@@ -38,7 +38,7 @@
 					
 					<!-- Password input-->
 					<div class="form-group">
-					  <label class="col-md-4 control-label" for="confirm_password">Password confirm</label>
+					  <label class="col-md-4 control-label" for="JQ_confirm_password">Password confirm</label>
 					  <div class="col-md-4">
 					    <input id="JQ_confirm_password" name="confirm_password" type="password" placeholder="" class="form-control input-md" >
 					    
@@ -47,11 +47,11 @@
 
 					<!-- Password input-->
 					<div class="form-group">
-					  <label class="col-md-4 control-label" for="lock_user">Lock user</label>
+					  <label class="col-md-4 control-label" for="JQ_lock_user">Lock user</label>
 					  <div class="col-md-4">
 					    
 					    <div class="checkbox">
-					    	<input id="JQ_lock_user" name="lock_user" type="checkbox" placeholder="" >
+					    	<label><input id="JQ_lock_user" class="input-md" name="lock_user" type="checkbox" placeholder="" ></label>
 					    </div>
 					    
 					  </div>
@@ -59,7 +59,7 @@
 					
 					<!-- Button -->
 					<div class="form-group">
-					  <label class="col-md-4 control-label" for="profile"></label>
+					  <label class="col-md-4 control-label" for="JQ_profile"></label>
 					  <div class="col-md-4">
 					    <button id="JQ_save" name="save" class="btn btn-primary">Save</button>
 					  </div>

@@ -40,6 +40,7 @@ UserSchema.methods.findSimilar = function (email, name, cb) {
 }
 
 UserSchema.methods.createUser = function(user, cb) {
+
     this.model('User').create(user, function(err, user) {
         if (err){  
             err.msg = (err.code === 11000) ? "User with such name or email already exist" : "Something went wrong during registration. Sorry :(";
@@ -51,11 +52,27 @@ UserSchema.methods.createUser = function(user, cb) {
 };
 
 UserSchema.methods.updateUser = function(user, cb) {
-  
+    var self = this;    
+
+    self.model('User').findById(user._id, function(err, old_user){
+        
+        old_user.username = user.username;
+        old_user.admin = user.admin;
+        old_user.locked = user.locked;
+        if (user.password) old_user.password = user.password;
+        old_user.save(function(err, user){
+            if (err) {
+                err.msr = "Something went wrong during updating user. Sorry :(";
+                cb(err);
+            } else {
+                cb(err, user);    
+            } 
+        }); 
+    });
 };
 
-UserSchema.methods.deleteUser = function(user, cb) {
-  
+UserSchema.methods.deleteUser = function(user_id, cb) {
+    this.model('User').findByIdAndRemove(user_id, cb);
 };
 
 var User = mongoose.model('User', UserSchema);

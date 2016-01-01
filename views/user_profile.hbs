@@ -3,17 +3,17 @@
 		<div class="col-md-12">
 			<div class="alert {{#if messageType}} {{messageType}} {{else}} alert-danger {{/if}} {{#unless message}} hide{{/unless}}" role="alert" id="JQ_message">{{{message}}}</div>
 			<form class="form-horizontal" method="post" id="JQ_profile_form">
-				<input type="hidden" name="id" value="{{user._id}}"/>
+				<input type="hidden" name="_id" value="{{user._id}}" id="JQ_user_id"/>
 				<fieldset>
 				
 					<!-- Form Name -->
-					<legend>{{user.username}} profile</legend>
+					<legend>{{#if user}}{{user.username}} profile{{else}}New user{{/if}}</legend>
 					
 					<!-- Text input-->
 					<div class="form-group">
 					  <label class="col-md-4 control-label" for="JQ_email">Email</label>  
 					  <div class="col-md-4">
-					  <input id="JQ_email" name="email" type="text" placeholder="" class="form-control input-md" value="{{user.email}}" disabled="">
+					  <input id="JQ_email" name="email" type="text" placeholder="" class="form-control input-md" value="{{user.email}}" {{#if user}}disabled=""{{/if}}>
 					    
 					  </div>
 					</div>
@@ -49,11 +49,18 @@
 					<div class="form-group">
 					  <label class="col-md-4 control-label" for="JQ_lock_user">Lock user</label>
 					  <div class="col-md-4">
-					    
 					    <div class="checkbox">
-					    	<label><input id="JQ_lock_user" class="input-md" name="lock_user" type="checkbox" placeholder="" ></label>
+					    	<label><input id="JQ_lock_user" class="input-md" name="locked" type="checkbox" placeholder="" {{#if user.locked}}checked="checked"{{/if}}></label>
 					    </div>
-					    
+					  </div>
+					</div>
+
+					<div class="form-group">
+					  <label class="col-md-4 control-label" for="JQ_admin">Admin</label>
+					  <div class="col-md-4">
+					    <div class="checkbox">
+					    	<label><input id="JQ_admin" class="input-md" name="admin" type="checkbox" placeholder="" {{#if user.admin}}checked="checked"{{/if}}></label>
+					    </div>
 					  </div>
 					</div>
 					
@@ -62,6 +69,10 @@
 					  <label class="col-md-4 control-label" for="JQ_profile"></label>
 					  <div class="col-md-4">
 					    <button id="JQ_save" name="save" class="btn btn-primary">Save</button>
+					    {{#if user}}
+					    - or -
+					    <button id="JQ_delete_user" name="save" class="btn btn-danger">Delete user</button>
+					    {{/if}}
 					  </div>
 					</div>
 				

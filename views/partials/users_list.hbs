@@ -1,6 +1,6 @@
 <div class="panel panel-default">
 	<div class="panel-heading">
-		All users:
+		All users: {{#if user.admin}} <a href="/user">add user</a>{{/if}}
 	</div>
 	<div class="panel-body">
 		{{#each users}}

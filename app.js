@@ -87,7 +87,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(function(req, res, next){
   if (req.session.user_id) {
     User.findOne({_id: req.session.user_id}, function(err, user){
-      req.user = user;
+      if (user) req.user = user;
       next();
     })
   } else {

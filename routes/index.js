@@ -170,32 +170,68 @@ router.post('/profile', auth.userLoggedIn, function(req, res, next) {
 	}
 });
 
+router.get('/user', auth.userAdmin, function(req, res) {
+	res.render('user_profile', {title: "New user", page: "user_profile"});
+});
+
 router.get('/user/:user_id', auth.userAdmin, function(req, res) {
 	var user_id = req.params.user_id;
 	User.findById(user_id, function (err, user) {
 		if (user === undefined) {
-			res.render('user_profile', {title: "User profile", page: "profile", message: "Looks like this user are not exist", });		
+			res.render('user_profile', {title: "User profile", page: "user_profile", message: "Looks like this user are not exist", });		
 		} else {
-			res.render('user_profile', {title: "User profile", page: "profile", user: user});		
+			res.render('user_profile', {title: "User profile", page: "user_profile", user: user});		
 		}
-		
 	});
 });
 
 router.post('/user/:user_id', auth.userAdmin, function(req, res) {
+	var form = req.body;
 	var user_id = req.params.user_id;
-	User.findById(user_id, function (err, user) {
-		if (user === undefined) {
-			res.render('user_profile', {title: "User profile", page: "profile", message: "Looks like this user are not exist", });		
-		} else {
-			res.render('user_profile', {title: "User profile", page: "profile", user: user});		
+
+	var constraints = {
+    	username: {
+    		presence: true,
+    	},
+    };
+
+    if (form.password || form.confirm_password) {
+    	constraints.password = {
+    		presence: true,	
+    	};
+    	constraints.confirm_password = {
+    		presence: true,	
+			equality: "password"
+		};
+    }
+    var validation = validate(form, constraints);
+
+    if (validation !== undefined) {
+		var message = "";
+		for(var index in validation) {     
+		    message += "<p>" + validation[index] + "</p>";
 		}
+		User.findById(user_id, function (err, user) {
+			res.render('user_profile', {user: user, title: "User profile", message: message, page: "user_profile"});	
+		});
 		
-	});
+	} else {
+		if (!form.admin) form.admin = false;
+		if (!form.locked) form.locked = false;
+		var user = new User;
+		user.updateUser(form, function(err, user){
+			res.render('user_profile', {title: "User profile", page: "user_profile", user: user, message: "Success! Profile saved.", messageType: "alert-success"});
+		});
+	}
 });
 
-router.get('/u', function(req, res){
-
-})
+router.get('/delete/:user_id', auth.userAdmin, function(req, res) {
+	
+	var user_id = req.params.user_id;
+	var user = new User;
+	user.deleteUser(user_id, function (err, user) {
+		res.redirect('/');
+	});
+});
 
 module.exports = router;

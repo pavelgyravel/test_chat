@@ -6,3 +6,12 @@ body {
 a {
   color: #00B7FF;
 }
+
+.chat_messages {
+	border: 1px solid #e7e7e7;
+	padding: 10px;
+	height: 60vh;
+	overflow: auto;
+	background: #f8f8f8;
+}
+

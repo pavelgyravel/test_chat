@@ -1,0 +1,72 @@
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="alert {{#if messageType}} {{messageType}} {{else}} alert-danger {{/if}} {{#unless message}} hide{{/unless}}" role="alert" id="JQ_message">{{{message}}}</div>
+			<form class="form-horizontal" method="post" id="JQ_profile_form">
+				<input type="hidden" name="id" value="{{user._id}}"/>
+				<fieldset>
+				
+					<!-- Form Name -->
+					<legend>{{user.username}} profile</legend>
+					
+					<!-- Text input-->
+					<div class="form-group">
+					  <label class="col-md-4 control-label" for="email">Email</label>  
+					  <div class="col-md-4">
+					  <input id="JQ_email" name="email" type="text" placeholder="" class="form-control input-md" value="{{user.email}}" disabled="">
+					    
+					  </div>
+					</div>
+					
+					<!-- Text input-->
+					<div class="form-group">
+					  <label class="col-md-4 control-label" for="name">Name</label>  
+					  <div class="col-md-4">
+					  <input id="JQ_name" name="name" type="text" placeholder="" class="form-control input-md" value="{{user.username}}">
+					    
+					  </div>
+					</div>
+					
+					<!-- Password input-->
+					<div class="form-group">
+					  <label class="col-md-4 control-label" for="password">Password</label>
+					  <div class="col-md-4">
+					    <input id="JQ_password" name="password" type="password" placeholder="" class="form-control input-md" >
+					    
+					  </div>
+					</div>
+					
+					<!-- Password input-->
+					<div class="form-group">
+					  <label class="col-md-4 control-label" for="confirm_password">Password confirm</label>
+					  <div class="col-md-4">
+					    <input id="JQ_confirm_password" name="confirm_password" type="password" placeholder="" class="form-control input-md" >
+					    
+					  </div>
+					</div>
+
+					<!-- Password input-->
+					<div class="form-group">
+					  <label class="col-md-4 control-label" for="lock_user">Lock user</label>
+					  <div class="col-md-4">
+					    
+					    <div class="checkbox">
+					    	<input id="JQ_lock_user" name="lock_user" type="checkbox" placeholder="" >
+					    </div>
+					    
+					  </div>
+					</div>
+					
+					<!-- Button -->
+					<div class="form-group">
+					  <label class="col-md-4 control-label" for="profile"></label>
+					  <div class="col-md-4">
+					    <button id="JQ_save" name="save" class="btn btn-primary">Save</button>
+					  </div>
+					</div>
+				
+				</fieldset>
+			</form>
+		</div>
+	</div>
+</div>

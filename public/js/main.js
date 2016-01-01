@@ -1,4 +1,4 @@
-define(["jquery"], function($) {
+define(["jquery", "jquery.bootstrap.collapse"], function($) {
     $(function($) {
         var $body = $('body')
 

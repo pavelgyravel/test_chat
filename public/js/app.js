@@ -5,12 +5,16 @@ require.config({
     paths: {
         jquery: "/components/jquery/dist/jquery.min",
         validate: "/components/validate/validate.min",
-        socketio: "/socket.io/socket.io"
+        socketio: "/socket.io/socket.io",
+        "jquery.bootstrap.collapse": "/components/bootstrap/js/collapse",
     },
     shim: {
     	'socketio': {
     		exports: 'io'
-    	}
+    	},
+    	"jquery.bootstrap.collapse": {
+            deps: ["jquery"]
+        },
 
     }
 });

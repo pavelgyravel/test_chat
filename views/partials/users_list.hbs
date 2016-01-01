@@ -1,11 +1,14 @@
-<ul class="list-group">
-	<li class="list-group-item list-group-item-info">Other users</li>
-	
-	{{#each users}}
-		{{#ifCond ../user._id _id}}
-			<li class="list-group-item"><b>{{username}} (it's you)</b></li>
-		{{else}}
-			<a href="#" class="list-group-item">{{username}}</a>
-		{{/ifCond}}
-	{{/each}}
-</ul>
+<div class="panel panel-default">
+	<div class="panel-heading">
+		All users:
+	</div>
+	<div class="panel-body">
+		{{#each users}}
+			{{#ifCond ../user._id _id}}
+				<div class="">{{username}} (it's you)</div>
+			{{else}}
+				<div class="">{{username}}  {{#if ../../user.admin}}<a href="/user/{{_id}}">edit</a>{{/if}}</div>
+			{{/ifCond}}
+		{{/each}}		
+	</div>
+</div>

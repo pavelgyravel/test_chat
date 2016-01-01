@@ -25,6 +25,7 @@ var app = express();
 var debug = require('debug')('tickets_chat:server');
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var ios = require('socket.io-express-session');
 
 var store = new MongoDBStore(
 { 
@@ -70,6 +71,17 @@ app.use(session({
     saveUninitialized: true,
     store: store
 }));
+
+io.use(ios(session({
+    secret: 'This is a secret',
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
+    },
+    resave: true,
+    saveUninitialized: true,
+    store: store
+})));
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(function(req, res, next){
@@ -130,13 +142,18 @@ app.use(function(err, req, res, next) {
 
 
 io.on('connection', function(socket) {
+
   console.log("a user connected ");
   socket.on('disconnect', function(){
     console.log('user disconnected');
   });
 
   socket.on('chat message', function (msg) {
-    io.emit('chat message', msg);
+    User.findById(socket.handshake.session.user_id, function(err, user){
+      console.log("message from " + socket.handshake.session.user_id);
+      io.emit('chat message', "<b>" + user.username + ":</b> " + msg);  
+    });
+    
   });
 });
 
@@ -162,7 +179,7 @@ app.set('port', port);
 // server.on('listening', onListening);
 
 http.listen(port, function(){
-  console.log('listening on *:3000');
+  console.log('listening on http://localhost:'+ port);
 });
 
 /**

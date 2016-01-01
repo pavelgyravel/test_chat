@@ -181,4 +181,16 @@ router.post('/profile', auth.userLoggedIn, function(req, res, next) {
 	}
 });
 
+router.get('/user/:user_id', auth.userAdmin, function(req, res) {
+	var user_id = req.params.user_id;
+	User.findById(user_id, function (err, user) {
+		if (user === undefined) {
+			res.render('user_profile', {title: "User profile", page: "profile", message: "Looks like this user are not exist", });		
+		} else {
+			res.render('user_profile', {title: "User profile", page: "profile", user: user});		
+		}
+		
+	});
+});;
+
 module.exports = router;

@@ -1,0 +1,11 @@
+{{#each users}}
+	<div class="chat_user {{#if online}} online {{/if}}"><a href="#" data-user-id="{{_id}}" {{#if socket_id}} data-socket-id="{{socket_id}}" {{/if}}  class="JQ_chat_user_link chat_user_link">{{username}} 
+	{{#each ../unread_messages}}
+		
+		{{#ifCond @key ../_id}}
+			<span class="badge">{{this}}</span>
+		{{/ifCond}}
+	{{/each}}
+
+	</a> {{#if ../user.admin}}<a href="/user/{{_id}}" class="edit_user"><span class="glyphicon glyphicon-pencil" ></span></a>{{/if}}</div>
+{{/each}}

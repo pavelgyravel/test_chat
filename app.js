@@ -50,7 +50,6 @@ filenames.forEach(function (filename) {
 });
 
 hbs.registerHelper("ifCond", function (v1, v2, options){
-    console.log('111111111 ', v1, v2);
     if(v1.toString() == v2.toString()) {
         return options.fn(this);
     }

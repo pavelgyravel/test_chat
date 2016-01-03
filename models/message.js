@@ -11,7 +11,7 @@ var MessageSchema = mongoose.Schema({
 MessageSchema.pre('save', function(next) {
     var message = this;
 
-    console.log("From model ", message);
+    //console.log("From model ", message);
 
     next();
     // if (!user.isModified('password')) return next();
@@ -28,6 +28,10 @@ MessageSchema.pre('save', function(next) {
     //     });
     // });
 });
+
+MessageSchema.methods.markAsRead = function () {   
+  //console.log(this);
+}
 
 var Message = mongoose.model('Message', MessageSchema);
 

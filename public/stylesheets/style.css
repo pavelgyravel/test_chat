@@ -15,3 +15,39 @@ a {
 	background: #f8f8f8;
 }
 
+.chat_messages li {
+	list-style: none;
+}
+
+.chat_user {
+	padding: 5px 0 5px 15px;
+	border-bottom: 1px solid #e7e7e7;
+	position: relative;
+}
+
+.chat_user:last-child {
+	padding-bottom: 0;
+	border-bottom: 0;
+}
+
+.chat_user:before {
+	content: '';
+	position: absolute;
+	height: 8px;
+	width: 8px;
+	top: 50%;
+	left: 0px;
+	margin-top: -3px;
+	border-radius: 15px;
+	border: 1px solid #e7e7e7;
+}
+
+.online:before {
+	border-color: green;
+	background: green;
+}
+
+.edit_user {
+	position: absolute;
+	right: 0px;
+}

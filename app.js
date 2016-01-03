@@ -142,9 +142,15 @@ app.use(function(err, req, res, next) {
 
 
 io.on('connection', function(socket) {
+  User.findByIdAndUpdate(socket.handshake.session.user_id, { $set: { online: true}}, function(err, user){
+    console.log("Connected " + user.username);
+  });
 
-  console.log("a user connected ");
+
   socket.on('disconnect', function(){
+    User.findByIdAndUpdate(socket.handshake.session.user_id, { $set: { online: false}}, function(err, user){
+      console.log("Disconected " + user.username);
+    });
     console.log('user disconnected');
   });
 

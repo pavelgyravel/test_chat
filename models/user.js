@@ -8,6 +8,7 @@ var UserSchema = mongoose.Schema({
     password: { type: String, required: true },
     admin: { type: Boolean, default: false },
     locked: { type: Boolean, default: false },
+    online: { type: Boolean, default: false },
 });
 
 UserSchema.pre('save', function(next) {

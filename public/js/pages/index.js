@@ -14,6 +14,7 @@ define(["jquery", "socketio"], function($, io) {
 
 		socket.on('chat message', function (msg) {
 			chat_messages.append($('<li>').html(msg));
+			chat_messages.scrollTop(chat_messages.prop('scrollHeight'));
 		});
         
     });

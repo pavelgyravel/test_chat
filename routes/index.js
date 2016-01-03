@@ -7,7 +7,7 @@ var auth = require('../lib/auth');
 
 
 router.get('/', auth.userLoggedIn, function(req, res, next) {
-	User.find({}, function(err, users) {
+	User.find({ _id: { '$ne': req.user._id}}, {}, { sort: { online: -1 }}, function(err, users) {
 		res.render('index', {users: users, user: req.user, page: "index"});		
 	})
 });

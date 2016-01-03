@@ -171,7 +171,7 @@ router.post('/profile', auth.userLoggedIn, function(req, res, next) {
 });
 
 router.get('/user', auth.userAdmin, function(req, res) {
-	res.render('user_profile', {title: "New user", page: "user_profile"});
+	res.render('new_user_profile', {title: "New user", page: "user_profile"});
 });
 
 

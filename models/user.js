@@ -43,6 +43,7 @@ UserSchema.methods.createUser = function(user, cb) {
 
     this.model('User').create(user, function(err, user) {
         if (err){  
+            console.log(err);
             err.msg = (err.code === 11000) ? "User with such name or email already exist" : "Something went wrong during registration. Sorry :(";
             cb(err);
         } else {

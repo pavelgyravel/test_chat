@@ -163,7 +163,7 @@ router.post('/profile', auth.userLoggedIn, function(req, res, next) {
 				user.password = form.password;
 			}
 			user.save(function(err, user){
-				// console.log(user);
+				
 				res.render('profile', {title: "User profile", page: "profile", form: user, user: user, message: "Success! Profile saved.", messageType: "alert-success"});		
 			});
 		})
@@ -172,6 +172,52 @@ router.post('/profile', auth.userLoggedIn, function(req, res, next) {
 
 router.get('/user', auth.userAdmin, function(req, res) {
 	res.render('user_profile', {title: "New user", page: "user_profile"});
+});
+
+
+router.post('/user', auth.userAdmin, function(req, res) {
+	var form = req.body;
+	console.log(form);
+
+	var constraints = {
+    	username: {
+    		presence: true,
+    	},
+        email: {
+            presence: true,
+            email: true
+        },
+        password: {
+    		presence: true,	
+    	},
+    	confirm_password: {
+    		presence: true,	
+			equality: "password"
+		}
+    };
+
+    var validation = validate(form, constraints);
+
+    if (validation !== undefined) {
+		var message = "";
+		for(var index in validation) {     
+		    message += "<p>" + validation[index] + "</p>";
+		}
+		res.render('new_user_profile', {form: form, title: "New user", message: message, page: "new_user_profile", user: form});
+	} else {
+		var user = new User;
+		user.createUser(form, function(err, user){
+			if (err) {
+				res.render('new_user_profile', {form: form, title: "New user", message: err.msg, page: "new_user_profile", user: form});	
+			} else {
+				res.render('user_profile', {title: "User profile", page: "profile", form: user, user: user, message: "Success! Profile saved.", messageType: "alert-success"});
+			}
+		});
+		
+	}
+
+
+	
 });
 
 router.get('/user/:user_id', auth.userAdmin, function(req, res) {

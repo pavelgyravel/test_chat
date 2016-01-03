@@ -25,6 +25,12 @@ a {
 	position: relative;
 }
 
+.current_chat_user {
+	color: #23527c;
+    text-decoration: underline;
+	font-weight: bold;
+}
+
 .chat_user:last-child {
 	padding-bottom: 0;
 	border-bottom: 0;
@@ -43,11 +49,16 @@ a {
 }
 
 .online:before {
-	border-color: green;
-	background: green;
+	border-color: #68E83E;
+	background: #68E83E;
 }
 
 .edit_user {
 	position: absolute;
 	right: 0px;
+}
+
+.badge {
+	float: right;
+    margin-right: 20px;
 }

@@ -9,6 +9,7 @@ var UserSchema = mongoose.Schema({
     admin: { type: Boolean, default: false },
     locked: { type: Boolean, default: false },
     online: { type: Boolean, default: false },
+    socket_id: { type: String,  index: { unique: true } },
 });
 
 UserSchema.pre('save', function(next) {

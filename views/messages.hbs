@@ -1,0 +1,11 @@
+{{#each messages}}
+	<li>
+		{{#ifCond ../user._id from}}
+			<b>Me:</b>
+		{{else}}
+			<b>{{../../other_user.username}}:</b>	
+		{{/ifCond}}
+
+		{{{message}}} 
+	</li>
+{{/each}}

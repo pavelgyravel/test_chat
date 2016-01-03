@@ -1,14 +1,22 @@
 var express = require('express');
 var router = express.Router();
 var User = require('../models/user');
+var Messages = require('../models/message');
 var validate = require("validate.js");
 var auth = require('../lib/auth');
-
+var _ = require('lodash');
 
 
 router.get('/', auth.userLoggedIn, function(req, res, next) {
 	User.find({ _id: { '$ne': req.user._id}}, {}, { sort: { online: -1 }}, function(err, users) {
-		res.render('index', {users: users, user: req.user, page: "index"});		
+		
+		Messages.find({ to: req.user._id, read: false}, function(err, messages){
+			var unread_messages = _.countBy(messages, function(message) {
+				return message.from;
+			});
+			res.render('index', {unread_messages: unread_messages, users: users, user: req.user, page: "index"});			
+		})
+		
 	})
 });
 
@@ -278,6 +286,21 @@ router.get('/delete/:user_id', auth.userAdmin, function(req, res) {
 	user.deleteUser(user_id, function (err, user) {
 		res.redirect('/');
 	});
+});
+
+router.get('/messages/:user_id', auth.userLoggedIn, function(req, res){
+	var user_to_id = req.params.user_id;
+	var user_from_id = req.session.user_id;
+	User.findById(user_to_id, function(err, other_user){
+		Messages.find( { $or:[ {from: user_from_id, to: user_to_id}, {from: user_to_id, to: user_from_id} ]},{}, { sort: { timestamp: 1 }}, function(err, messages) {
+		    if(!err) {
+		   		res.render('messages', {messages: messages, layout: false, user: req.user, other_user: other_user});
+		    } else {
+		    	res.send([]);
+		    }
+		});    
+	});
+	
 });
 
 module.exports = router;

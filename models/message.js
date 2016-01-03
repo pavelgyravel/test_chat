@@ -11,7 +11,9 @@ var MessageSchema = mongoose.Schema({
 MessageSchema.pre('save', function(next) {
     var message = this;
 
-    console.log(message);
+    console.log("From model ", message);
+
+    next();
     // if (!user.isModified('password')) return next();
 
     // bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {

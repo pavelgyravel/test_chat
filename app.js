@@ -18,6 +18,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 
 var User = require('./models/user');
+var Message = require('./models/message');
 
 var app = express();
 
@@ -49,6 +50,7 @@ filenames.forEach(function (filename) {
 });
 
 hbs.registerHelper("ifCond", function (v1, v2, options){
+    console.log('111111111 ', v1, v2);
     if(v1.toString() == v2.toString()) {
         return options.fn(this);
     }
@@ -142,25 +144,24 @@ app.use(function(err, req, res, next) {
 
 
 io.on('connection', function(socket) {
-  User.findByIdAndUpdate(socket.handshake.session.user_id, { $set: { online: true}}, function(err, user){
-    console.log("Connected " + user.username);
+  User.findByIdAndUpdate(socket.handshake.session.user_id, { $set: { online: true, socket_id: socket.id}}, function(err, user){
+    //console.log("Connected " + user.username);
   });
-
 
   socket.on('disconnect', function(){
-    User.findByIdAndUpdate(socket.handshake.session.user_id, { $set: { online: false}}, function(err, user){
-      console.log("Disconected " + user.username);
+    User.findByIdAndUpdate(socket.handshake.session.user_id, { $set: { online: false, socket_id: ""}}, function(err, user){
+      //console.log("Disconected " + user.username);
     });
-    console.log('user disconnected');
   });
 
-  socket.on('chat message', function (msg) {
-    User.findById(socket.handshake.session.user_id, function(err, user){
-      console.log("message from " + socket.handshake.session.user_id);
-      io.emit('chat message', "<b>" + user.username + ":</b> " + msg);  
-    });
-    
+  socket.on('chat message', function (user_to_id, msg) {
+    User.findById(user_to_id, function(err, user){
+      Message.create({from: socket.handshake.session.user_id, to: user_to_id, message:  msg}, function(err, message){      
+        socket.broadcast.to(user.socket_id).emit('chat message', socket.handshake.session.user_id, msg);
+      });
+    });    
   });
+
 });
 
 /**

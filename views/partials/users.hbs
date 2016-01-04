@@ -1,6 +1,9 @@
 {{#each users}}
 	
 	<div class="chat_user {{#if online}} online {{/if}}"><a href="#" data-user-id="{{_id}}" id="{{_id}}" {{#if socket_id}} data-socket-id="{{socket_id}}" {{/if}}  class="JQ_chat_user_link chat_user_link">{{username}} 
+	{{#if locked}}
+		(locked)
+	{{/if}}
 	{{#each ../unread_messages}}
 		
 		{{#ifCond @key ../_id}}

@@ -22,7 +22,6 @@ var Message = require('./models/message');
 
 var app = express();
 
-
 var debug = require('debug')('tickets_chat:server');
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
@@ -133,64 +132,54 @@ app.use(function(err, req, res, next) {
 });
 
 
-//#!/usr/bin/env node
-
-/**
- * Module dependencies.
- */
-
-
-
-
 io.on('connection', function(socket) {
-  User.findByIdAndUpdate(socket.handshake.session.user_id, { $set: { online: true, socket_id: socket.id}}, function(err, user){
-    //console.log("Connected " + user.username);
+  User.findByIdAndUpdate(socket.handshake.session.user_id, { $set: { online: true, socket_id: socket.id}}, function(err, user) {
+    io.emit('user list');
+    console.log('User ', socket.handshake.session.user_id, ' connected');
   });
 
   socket.on('disconnect', function(){
     User.findByIdAndUpdate(socket.handshake.session.user_id, { $set: { online: false, socket_id: ""}}, function(err, user){
-      //console.log("Disconected " + user.username);
+      io.emit('user list');
+      console.log('User ', socket.handshake.session.user_id, ' disconnected');
     });
   });
 
   socket.on('chat message', function (user_to_id, msg) {
-    User.findById(user_to_id, function(err, user){
-      Message.create({from: socket.handshake.session.user_id, to: user_to_id, message:  msg}, function(err, message){      
-        socket.broadcast.to(user.socket_id).emit('chat message', socket.handshake.session.user_id, msg);
-      });
-    });    
+    User.findById(socket.handshake.session.user_id, function(err, user){
+      if(!user.locked) {
+        User.findById(user_to_id, function(err, user){
+          if (!user.locked) {
+            Message.create({from: socket.handshake.session.user_id, to: user_to_id, message:  msg}, function(err, message){      
+              socket.broadcast.to(user.socket_id).emit('chat message', socket.handshake.session.user_id, msg);
+            });  
+          } else {
+            io.emit('user locked');
+          }
+          
+        });
+      } else {
+        io.emit('user locked');
+      }
+    });
+  });
+
+  socket.on('read message', function(user_to_id){
+    console.log(user_to_id, socket.handshake.session.user_id);
+    Message.update({ from: user_to_id, to: socket.handshake.session.user_id, read: false }, { $set: { read: true }}, function(err, message){
+      console.log(err, message);
+    });
   });
 
 });
 
-/**
- * Get port from environment and store in Express.
- */
 
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
-/**
- * Create HTTP server.
- */
-
-//var server = http.createServer(app);
-
-/**
- * Listen on provided port, on all network interfaces.
- */
-
-// server.listen(port);
-// server.on('error', onError);
-// server.on('listening', onListening);
-
 http.listen(port, function(){
   console.log('listening on http://localhost:'+ port);
 });
-
-/**
- * Normalize a port into a number, string, or false.
- */
 
 function normalizePort(val) {
   var port = parseInt(val, 10);
@@ -207,44 +196,4 @@ function normalizePort(val) {
 
   return false;
 }
-
-/**
- * Event listener for HTTP server "error" event.
- */
-
-// function onError(error) {
-//   if (error.syscall !== 'listen') {
-//     throw error;
-//   }
-
-//   var bind = typeof port === 'string'
-//     ? 'Pipe ' + port
-//     : 'Port ' + port;
-
-//   // handle specific listen errors with friendly messages
-//   switch (error.code) {
-//     case 'EACCES':
-//       console.error(bind + ' requires elevated privileges');
-//       process.exit(1);
-//       break;
-//     case 'EADDRINUSE':
-//       console.error(bind + ' is already in use');
-//       process.exit(1);
-//       break;
-//     default:
-//       throw error;
-//   }
-// }
-
-/**
- * Event listener for HTTP server "listening" event.
- */
-
-// function onListening() {
-//   var addr = server.address();
-//   var bind = typeof addr === 'string'
-//     ? 'pipe ' + addr
-//     : 'port ' + addr.port;
-//   debug('Listening on ' + bind);
-// }
 

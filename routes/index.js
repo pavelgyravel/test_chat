@@ -305,17 +305,6 @@ router.get('/messages/:user_id', auth.userLoggedIn, function(req, res){
 	var user_from_id = req.session.user_id;
 	User.findById(user_to_id, function(err, other_user){
 		Messages.find( { $or:[ {from: user_from_id, to: user_to_id}, {from: user_to_id, to: user_from_id} ]},{}, { sort: { timestamp: 1 }}, function(err, messages) {
-				
-			// Messages.find({to: user_to_id, read: false}, function(err, m){
-			// 	console.log(user_to_id, m);
-
-			// 	if(!err) {
-			//    		res.render('messages', {messages: messages, layout: false, user: req.user, other_user: other_user});
-			//     } else {
-			//     	res.send([]);
-			//     }
-			// });
-			
 
 			for (var i in messages) {
 				messages[i].read = true;

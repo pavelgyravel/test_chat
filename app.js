@@ -139,7 +139,7 @@ io.on('connection', function(socket) {
   });
 
   socket.on('disconnect', function(){
-    User.findByIdAndUpdate(socket.handshake.session.user_id, { $set: { online: false, socket_id: ""}}, function(err, user){
+    User.findByIdAndUpdate(socket.handshake.session.user_id, { $set: { online: false}}, function(err, user){
       io.emit('user list');
       console.log(err, user);
       console.log('User ', socket.handshake.session.user_id, ' disconnected');
